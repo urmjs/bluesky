@@ -52,6 +52,7 @@ cmdsynon = {
     "AWY": "POS",
     "AIRPORT": "POS",
     "AIRWAYS": "AIRWAY",
+    "BANKLIM": "BANK",
     "CALL": "PCALL",
     "CHDIR": "CD",
     "COL": "COLOR",
@@ -115,7 +116,9 @@ cmdsynon = {
     "PREDASAS": "TMX",
     "RENAME": "TMX",
     "RETYPE": "TMX",
+    "SETTHR": "THR",
     "SWNLRPASAS": "TMX",
+    "THROTTLE": "THR",
     "TRAFRECDT": "TMX",
     "TRAFLOGDT": "TMX",
     "TREACT": "TMX",
@@ -264,12 +267,19 @@ def init(startup_scnfile):
             bs.traf.cond.atspdcmd,
             "When a/c reaches given speed, execute a command cmd",
         ],
+        "BANK": [
+            "BANK bankangle[deg]",
+            "acid,[float]",
+            bs.traf.setbanklim,
+            "Set or show bank limit for this vehicle",
+        ],
         "BATCH": [
             "BATCH filename",
             "string",
             bs.sim.batch,
             "Start a scenario file as batch simulation",
         ],
+
         "BEFORE": [
             "acid BEFORE beforewp ADDWPT (wpname/lat,lon),[alt,spd]",
             "acid,wpinroute,txt,wpt,[alt,spd]",
@@ -748,6 +758,12 @@ def init(startup_scnfile):
             syn.process,
             "Macro for generating synthetic (geometric) traffic scenarios",
         ],
+        "THR": [
+            "THR acid, IDLE/0.0/throttlesetting/1.0/AUTO(default)",
+            "acid[,txt]",
+            bs.traf.setthrottle,
+            "Set throttle or autotothrottle(default)",
+        ],
         "TIME": [
             "TIME RUN(default) / HH:MM:SS.hh / REAL / UTC ",
             "[txt]",
@@ -831,7 +847,7 @@ def init(startup_scnfile):
 
     # Load initial scenario if passed
     if startup_scnfile:
-        ic(startup_scnfile)
+        stack(f'IC {startup_scnfile}')
 
 
 def sender():
